@@ -1,12 +1,29 @@
 // package for executable build
 package main
 
-// formatting strings and printing messages
-import "fmt"
+// fmt: formatting strings and printing messages
+// sort: lots of methods to sort stuff
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
-// main function - only have one on your entrypoint and not on other files
+// main function - only have one on your entrypoint and not on other files OF THE SAME PACKAGE
 func main() {
+	//sayHello("Douchebag")
 
+	//essentials()
+	//loops()
+
+	//mappingAndObjects()
+	//pointersAndMemory()
+
+	keira := newCharacter("Keira")
+	fmt.Println(keira.stuffFormat())
+}
+
+func essentials() {
 	// GO vars will automatically infer type, but specify it anyway, it'll help
 	// watch out : we NEED to use variables otherwise the compiler goes sob sob
 
@@ -54,6 +71,16 @@ func main() {
 	// // myRange := mySlice[:1] (returns 10,20 - it's UP TO position X)
 	// // myRange := mySlice[1:] (returns 20,30 - it's FROM position X)
 
+	charactersSlice := []string{"rapto", "keira", "horkos", "pardaramskha", "azi"}
+
+	// PACKAGE: "sort"
+
+	// the sort methods will modify the original slice - no need to register that in a new variable for it to take effect
+	sort.Strings(charactersSlice)
+
+	// the sort.Search___ will return the index of desired element, with args (slice to search, element to find)
+	fmt.Println(charactersSlice, sort.SearchStrings(charactersSlice, "keira"))
+
 	// --------------------------------
 
 	// PACKAGE: "strings"
@@ -62,7 +89,67 @@ func main() {
 	// // => returns true
 	// EXAMPLE: fmt.Println(strings.ReplaceAll(helloWorld, "Hello", "Hi"))
 	// // => returns "Hi honey!"
-
 }
 
-// To run : `go run [file]`
+func loops() {
+
+	charactersSlice := []string{"rapto", "keira", "horkos", "pardaramskha", "azi"}
+
+	fmt.Println("---- SIMPLE LOOPS")
+	// simple loop with initialisation, condition and increment per loop
+	//for x := 0; x < len(charactersSlice); x++ {
+	//	fmt.Println(charactersSlice[x])
+	//}
+
+	fmt.Println("---- FOR/IN LOOPS")
+	// "for/in" loop
+
+	// example 1
+	//for index, value := range charactersSlice {
+	//	fmt.Printf("%v is number %v \n", value, index)
+	//}
+
+	// watch out for it returns specific things: index first, value second. Use underscore to not use a designed value
+
+	// example 2
+	//for _, name := range charactersSlice {
+	//	fmt.Println(name)
+	//}
+
+	// example 3 with conditions and keywords
+	for _, name := range charactersSlice {
+		if name == "keira" {
+			fmt.Printf("Main character: %v \n", toUppercase(name))
+			// the continue keyword stops the code here but allows the loop to continue
+			continue
+		} else if name == "pardaramskha" {
+			fmt.Println("We stop here, we don't need the chicken")
+			// the break keyword just stops everything
+			break
+		}
+
+		fmt.Printf("Character: %v \n", toUppercase(name))
+	}
+
+	// NOTE: altering the value in a loop DOES NOT change original slice values
+}
+
+func cycleNames(slice []string, function func(string)) {
+	for _, value := range slice {
+		function(value)
+	}
+}
+
+// we have to specify the type of value returned before the braces
+// to return multiple values, add parenthesis. Example below returns two strings
+// -- func functionName(arg string) (string, string) { ... }
+func toUppercase(name string) string {
+	return strings.ToUpper(name)
+}
+
+func mappingAndObjects() {
+	//age := checkAge("Idiot")
+	//fmt.Println(age)
+}
+
+// To run : `go run [files]`
