@@ -12,7 +12,10 @@ var serverPort = ":5000"
 
 func main() {
 	fmt.Println("Starting API...")
+	launchServer()
+}
 
+func launchServer() {
 	router := chi.NewRouter()
 	// Logs information about incoming requests
 	router.Use(middleware.Logger)
