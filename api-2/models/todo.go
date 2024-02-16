@@ -5,3 +5,8 @@ type Todo struct {
 	Label   string `json:"label"`
 	Checked bool   `json:"checked"`
 }
+
+type TodoCreate struct {
+	Label   string `json:"label"`
+	Checked bool   `json:"checked"`
+}
