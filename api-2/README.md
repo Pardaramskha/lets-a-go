@@ -2,6 +2,7 @@
 
 ## Dependencies
 * **Chi** for HTTP server
+* **Chi/cors** for CORS 
 * **Godotenv** for .env
 * **PQ** because PostgreSQL database
 
