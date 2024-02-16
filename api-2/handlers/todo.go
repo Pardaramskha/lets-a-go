@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -41,6 +42,26 @@ func (handler TodoHandler) GetTodo(responseWriter http.ResponseWriter, request *
 		log.Fatalf("Failed to write response: %v", err)
 	} else {
 		fmt.Println("Request completed: GET /todo")
+	}
+
+	return nil
+}
+
+func (handler TodoHandler) CreateTodo(responseWriter http.ResponseWriter, request *http.Request) error {
+
+	var todo models.TodoCreate
+	err := json.NewDecoder(request.Body).Decode(&todo)
+	if err != nil {
+		log.Fatalf("Error while decoding TODO json")
+		return err
+	}
+
+	createdTodo := createTodo(todo)
+	err = utils.WriteJSON(responseWriter, http.StatusCreated, createdTodo)
+	if err != nil {
+		log.Fatalf("Failed to write response: %v", err)
+	} else {
+		fmt.Println("Request completed: POST /todo")
 	}
 
 	return nil
@@ -106,7 +127,23 @@ func getTodo(id string) models.Todo {
 	return todo
 }
 
-func createTodo(todo models.TodoCreate) {
+func createTodo(todo models.TodoCreate) models.Todo {
+	db := storage.NewPostgresStore()
+	defer db.Close()
+
+	query := `insert into todo (label, checked) values ($1, $2) returning ID, label, checked`
+
+	var returnedTodo models.Todo
+
+	err := db.
+		QueryRow(query, todo.Label, todo.Checked).
+		Scan(&returnedTodo.ID, &returnedTodo.Label, &returnedTodo.Checked)
+
+	if err != nil {
+		log.Fatalf("Error while executing query: %v", err)
+	}
+
+	return returnedTodo
 
 }
 
