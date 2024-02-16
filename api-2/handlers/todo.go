@@ -67,9 +67,28 @@ func (handler TodoHandler) CreateTodo(responseWriter http.ResponseWriter, reques
 	return nil
 }
 
+func (handler TodoHandler) EditTodo(responseWriter http.ResponseWriter, request *http.Request) error {
+
+	var todo models.Todo
+	err := json.NewDecoder(request.Body).Decode(&todo)
+	if err != nil {
+		log.Fatalf("Error while decoding TODO json")
+		return err
+	}
+
+	editedTodos := editTodo(todo)
+	err = utils.WriteJSON(responseWriter, http.StatusCreated, editedTodos)
+	if err != nil {
+		log.Fatalf("Failed to write response: %v", err)
+	} else {
+		fmt.Println("Request completed: POST /todo")
+	}
+
+	return nil
+}
+
 // Database functions
 // --------------------------------------------------------------------------------------------------------------------
-
 func getAllTodos() []models.Todo {
 
 	var todos []models.Todo
@@ -147,8 +166,26 @@ func createTodo(todo models.TodoCreate) models.Todo {
 
 }
 
-func editTodo(todo models.Todo) {
+func editTodo(todo models.Todo) int64 {
+	db := storage.NewPostgresStore()
+	defer db.Close()
 
+	query := `update todo
+		set label=$1, checked=$2
+		where id=$3 
+	`
+
+	res, err := db.Exec(query, todo.Label, todo.Checked, todo.ID)
+	if err != nil {
+		log.Fatalf("Error while executing query: %v", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("Error while scanning rows: %v", err)
+	}
+
+	return rowsAffected
 }
 
 func deleteTodo(id string) {
