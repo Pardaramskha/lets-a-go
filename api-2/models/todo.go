@@ -1,8 +1,8 @@
 package models
 
 type Todo struct {
-	ID      any    `json:"id"`
-	Label   string `json:"label"`
+	ID      int64  `json:"id,omitempty"`
+	Label   string `json:"label,omitempty"`
 	Checked bool   `json:"checked"`
 }
 

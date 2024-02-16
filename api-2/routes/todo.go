@@ -15,6 +15,7 @@ func TodoRoutes() chi.Router {
 	router.Get("/{id}", utils.MakeHTTPHandleFunc(todoHandler.GetTodo))
 	router.Post("/", utils.MakeHTTPHandleFunc(todoHandler.CreateTodo))
 	router.Put("/", utils.MakeHTTPHandleFunc(todoHandler.EditTodo))
+	router.Delete("/{id}", utils.MakeHTTPHandleFunc(todoHandler.DeleteTodo))
 	//router.Post("/", makeHTTPHandleFunc(todoHandler.CreateTodo))
 	//router.Get("/{id}", makeHTTPHandleFunc(todoHandler.GetTodo))
 	//router.Put("/{id}", makeHTTPHandleFunc(todoHandler.EditTodo))
