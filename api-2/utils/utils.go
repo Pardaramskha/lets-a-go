@@ -29,6 +29,9 @@ func MakeHTTPHandleFunc(function apiFunc) http.HandlerFunc {
 func WriteJSON(w http.ResponseWriter, status int, content any) error {
 	// First set the type of header properly to json
 	// Must be first otherwise the response goes gah-gah
+// 		w.Header().Set("Access-Control-Allow-Origin", "*")
+//         w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+//     	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 
 	// Write given status

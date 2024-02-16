@@ -77,11 +77,11 @@ func (handler TodoHandler) EditTodo(responseWriter http.ResponseWriter, request 
 	}
 
 	editedTodos := editTodo(todo)
-	err = utils.WriteJSON(responseWriter, http.StatusCreated, editedTodos)
+	err = utils.WriteJSON(responseWriter, http.StatusAccepted, editedTodos)
 	if err != nil {
 		log.Fatalf("Failed to write response: %v", err)
 	} else {
-		fmt.Println("Request completed: POST /todo")
+		fmt.Println("Request completed: PUT /todo")
 	}
 
 	return nil
@@ -94,7 +94,7 @@ func (handler TodoHandler) DeleteTodo(responseWriter http.ResponseWriter, reques
 	id := chi.URLParam(request, "id")
 	deletedTodos := deleteTodo(id)
 
-	err := utils.WriteJSON(responseWriter, http.StatusCreated, deletedTodos)
+	err := utils.WriteJSON(responseWriter, http.StatusOK, deletedTodos)
 	if err != nil {
 		log.Fatalf("Failed to write response: %v", err)
 	} else {
@@ -113,7 +113,7 @@ func getAllTodos() []models.Todo {
 	db := storage.NewPostgresStore()
 	defer db.Close()
 
-	query := `select * from todo`
+	query := `select * from todo order by Label`
 
 	rows, err := db.Query(query)
 	if err != nil {
